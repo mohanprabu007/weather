@@ -1,5 +1,7 @@
 package com.weather.configuration;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,27 +15,28 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.weather.WeatherApplication;
 import com.weather.configuration.jwtSecurity.CredentialService;
 import com.weather.configuration.jwtSecurity.JwtAuthEntryPoint;
 import com.weather.configuration.jwtSecurity.JwtAuthTokenFilter;
 
 @Configuration
 @EnableWebSecurity
-public class common_security_config extends WebSecurityConfigurerAdapter{
+public class CmnSecurityConfig extends WebSecurityConfigurerAdapter{
 
 		
 				
 	@Autowired
 	private CredentialService CredentialService;	
 
-
+	private static final Logger LOGGER = LogManager.getLogger(WeatherApplication.class);
 		@Autowired
 		  public void configAuthentication(AuthenticationManagerBuilder auth) throws Exception {
 			     
 			       auth.userDetailsService(CredentialService).passwordEncoder( new BCryptPasswordEncoder());
 		  }
 
-	    @Autowired
+	    	@Autowired
 		    private JwtAuthEntryPoint unauthorizedHandler;
 
 		    @Bean
@@ -59,7 +62,8 @@ public class common_security_config extends WebSecurityConfigurerAdapter{
 		                //.exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
 		                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		        http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
-		        System.out.println("Security API Configuration Done...");
+		        LOGGER.info("Security API Configuration Done...");
+		       
 		    }
 			
 

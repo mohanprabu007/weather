@@ -1,37 +1,42 @@
-package com.weather.partyUtill;
+package com.weather.businessLogic;
 
 import java.io.IOException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.weather.model.weatherReq;
-import com.weather.model.weatherResponse;
+import com.weather.model.WeatherRequest;
+import com.weather.model.WeatherResponse;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
 @Service
-public class openweather implements weatherdata{
+@Qualifier("OpenWeather")
+public class OpenWeatherImpl implements WeatherData{
 
+	private static final Logger LOGGER = LogManager.getLogger(OpenWeatherImpl.class);
 	private static String MAIN_URL="http://api.openweathermap.org";
 	private static String GET_WEATHER_END_POINT="/data/2.5/weather?q={cityname}&appid={APIkey}";
 	private static String AUTH_KEY="793050bde8c1f719c7f146a9a40e6af3";
 	
 	public static void main(String[] a)
 	{
-		weatherReq r=new weatherReq();
-		r.setCity("chennai");
-		openweather o=new openweather(); 
-		weatherResponse res=o.getweatherData(r);
+		WeatherRequest req=new WeatherRequest();
+		req.setCity("chennai");
+		OpenWeatherImpl o=new OpenWeatherImpl(); 
+		WeatherResponse res=o.getweatherData(req);
 		
-		System.out.println(res);
+		LOGGER.info(res);
 	}
 	
-	public weatherResponse getweatherData(weatherReq req) {
+	public WeatherResponse getweatherData(WeatherRequest req) {
 		
-		weatherResponse wr=new weatherResponse();
+		WeatherResponse wr=new WeatherResponse();
 		JSONObject obj=GetWeatherDataFromAPI(req.getCity());
 		wr.setCity(req.getCity());
 		wr.setTempUom(req.getUom());
@@ -70,7 +75,7 @@ public class openweather implements weatherdata{
 			String parsedEndpoint=GET_WEATHER_END_POINT;
 			parsedEndpoint=parsedEndpoint.replace("{cityname}", cityname);
 			parsedEndpoint=parsedEndpoint.replace("{APIkey}", AUTH_KEY);
-			System.out.println(MAIN_URL+parsedEndpoint);
+			LOGGER.info(MAIN_URL+parsedEndpoint);
 			Request request = new Request.Builder()
 					 .url(MAIN_URL+parsedEndpoint)
 			  .get()
@@ -80,12 +85,11 @@ public class openweather implements weatherdata{
 
 			Response response = client.newCall(request).execute();
 			returnvalue=response.body().string();
-			System.out.println("...."+returnvalue);
+			LOGGER.info("..ssss.."+returnvalue);
 		} catch (IOException e) {}
 		catch (Exception e) {}
 		if(returnvalue.contains("<head>")) returnvalue="{}";
 		if (returnvalue.equalsIgnoreCase("")) returnvalue="{}";
 		return new JSONObject(returnvalue);
 	}
-	
-}
+	}

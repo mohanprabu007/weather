@@ -1,12 +1,14 @@
 package com.weather.model;
 
-public class responseModel {
+import java.util.List;
+
+public class ResponseModel {
 	private boolean isError=false;
 	private Object content;
 	public String msg;
-	public ErrorInfo errors;
+	public List<ErrorInfo> errors;
 	
-	public responseModel() {}
+	public ResponseModel() {}
 
 	public boolean isError() {
 		return isError;
@@ -20,7 +22,7 @@ public class responseModel {
 		return msg;
 	}
 
-	public ErrorInfo getErrors() {
+	public List<ErrorInfo> getErrors() {
 		return errors;
 	}
 
@@ -36,7 +38,7 @@ public class responseModel {
 		this.msg = msg;
 	}
 
-	public void setErrors(ErrorInfo errors) {
+	public void setErrors(List<ErrorInfo> errors) {
 		this.errors = errors;
 	}
 	

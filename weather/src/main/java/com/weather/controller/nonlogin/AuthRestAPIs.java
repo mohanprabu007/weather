@@ -31,26 +31,17 @@ public class AuthRestAPIs {
     @PostMapping("/getToken")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginForm login,HttpServletRequest request ) {
 
-    	//System.out.println(login.getUserId());
-    	//System.out.println(login.getPassword());
+
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                 		login.getUserName(),
                 		login.getPassword()
                 )
         );
-        
-       
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        
-        
-	    String name = authentication.getName(); //get logged in username
+        String name = authentication.getName(); //get logged in username
 	  
-	      
-	   
-	      
-	   
-	  	  String jwt = jwtProvider.generateJwtToken(authentication);
+	      String jwt = jwtProvider.generateJwtToken(authentication);
 	   	  return ResponseEntity.ok(new JwtResponse(jwt));
     }
 

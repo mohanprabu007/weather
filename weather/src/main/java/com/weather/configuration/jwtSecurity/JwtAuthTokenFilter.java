@@ -7,8 +7,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,13 +19,13 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 public class JwtAuthTokenFilter extends OncePerRequestFilter {
 
+	private static final Logger LOGGER = LogManager.getLogger(JwtAuthTokenFilter.class);
     @Autowired
     private JwtProvider tokenProvider;
 
     @Autowired
-   	private CredentialService CredentialService
-   	;
-    private static final Logger logger = LoggerFactory.getLogger(JwtAuthTokenFilter.class);
+   	private CredentialService CredentialService;
+    
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, 
@@ -37,7 +37,7 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
             String jwt = getJwt(request);
             if (jwt!=null && tokenProvider.validateJwtToken(jwt)) {
                 String username = tokenProvider.getUserNameFromJwtToken(jwt);
-               System.out.println("username::"+username);
+                LOGGER.error("User Name ::"+username);
                 UserDetails userDetails = CredentialService.loadUserByUsername(username);
                 UsernamePasswordAuthenticationToken authentication 
                 		= new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
@@ -45,7 +45,7 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
              }
         } catch (Exception e) {
-        	logger.error("Can NOT set user authentication -> Message: {}", e);
+        	LOGGER.error("Can NOT set user authentication -> Message: {}", e);
         }
 
         filterChain.doFilter(request, response);

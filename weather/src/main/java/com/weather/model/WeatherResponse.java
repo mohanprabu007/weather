@@ -2,7 +2,7 @@ package com.weather.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-public class weatherResponse {
+public class WeatherResponse {
 
 	private String city;
 	
@@ -72,13 +72,6 @@ public class weatherResponse {
 	public void setErrormsg(String errormsg) {
 		this.errormsg = errormsg;
 	}
-	@Override
-	public String toString() {
-		return "weatherResponse [city=" + city + ", tempBaseUnit=" + tempBaseUnit + ", tempBaseUom=" + tempBaseUom
-				+ ", temp=" + temp + ", tempUom=" + tempUom + ", temperature=" + temperature + ", isError=" + isError
-				+ ", errormsg=" + errormsg + "]";
-	}
-
 	public void updateTemp()
 	{
 		
@@ -89,6 +82,14 @@ public class weatherResponse {
 		
 	}
 	
+	@Override
+	public String toString() {
+		return "weatherResponse [city=" + city + ", tempBaseUnit=" + tempBaseUnit + ", tempBaseUom=" + tempBaseUom
+				+ ", temp=" + temp + ", tempUom=" + tempUom + ", temperature=" + temperature + ", isError=" + isError
+				+ ", errormsg=" + errormsg + "]";
+	}
+
+
 
 
 }

@@ -1,4 +1,4 @@
-package com.weather.configuration.ExceptionHandler;
+package com.weather.configuration.exceptionHandler;
 
 public class ApiException extends RuntimeException{
 	
